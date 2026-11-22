@@ -1,84 +1,59 @@
 (function () {
-  'use strict';
+  var d = document, root = d.documentElement;
+  var bar = d.getElementById('bar'), hero = d.querySelector('.hero');
 
-  // Illustrative coverage-gap model: fixed 400-day scale so bar lengths stay comparable.
-  var SCALE = 400;
-  var rem = document.getElementById('rem');
-  var ten = document.getElementById('ten');
-  var remOut = document.getElementById('remOut');
-  var tenOut = document.getElementById('tenOut');
-  var gap = document.getElementById('gap');
-  var result = document.getElementById('result');
+  /* hero entrance */
+  requestAnimationFrame(function () { setTimeout(function () { hero.classList.add('is-ready'); }, 60); });
 
-  function plural(n) { return n + (n === 1 ? ' day' : ' days'); }
-
-  function update() {
-    if (!rem || !ten || !gap || !result) { return; }
-    var r = Number(rem.value);
-    var t = Number(ten.value);
-    remOut.textContent = r;
-    tenOut.textContent = t;
-    gap.style.setProperty('--a', (r / SCALE * 100) + '%');
-    gap.style.setProperty('--b', (t / SCALE * 100) + '%');
-    if (t > r) {
-      result.innerHTML = '<strong>' + plural(t - r) + ' uncovered.</strong> The contract ends ' + plural(t - r) + ' before its replacement can be awarded.';
-    } else if (t === r) {
-      result.innerHTML = '<strong>No spare time.</strong> The replacement is awarded on the day the contract ends.';
-    } else {
-      result.innerHTML = '<strong>Covered.</strong> The replacement can be awarded ' + plural(r - t) + ' before the contract ends.';
-    }
+  /* sticky bar solid after hero top */
+  function onScroll() {
+    bar.classList.toggle('is-solid', window.scrollY > 40 && !d.body.classList.contains('menu-open'));
+    updateChain();
   }
 
-  if (rem && ten) {
-    rem.addEventListener('input', update);
-    ten.addEventListener('input', update);
-    update();
-  }
+  /* reveal on scroll */
+  var els = d.querySelectorAll('.rv');
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+    els.forEach(function (el) { io.observe(el); });
+  } else { els.forEach(function (el) { el.classList.add('in'); }); }
 
-  // Share and copy link.
-  var toast = document.getElementById('toast');
-  var timer;
-  function say(msg) {
-    if (!toast) { return; }
-    toast.textContent = msg;
-    clearTimeout(timer);
-    timer = setTimeout(function () { toast.textContent = ''; }, 3500);
+  /* capability chain: line fills as you scroll, nodes light up */
+  var chain = d.getElementById('chain'), items = chain ? chain.querySelectorAll('li') : [];
+  function updateChain() {
+    if (!chain) return;
+    var r = chain.getBoundingClientRect(), vh = window.innerHeight, mark = vh * 0.6;
+    var p = Math.min(1, Math.max(0, (mark - r.top) / r.height));
+    chain.style.setProperty('--p', p.toFixed(3));
+    items.forEach(function (li) { li.classList.toggle('on', li.getBoundingClientRect().top < mark); });
   }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', updateChain);
+  onScroll();
 
-  function copy(url) {
+  /* mobile menu */
+  var btn = d.getElementById('menuBtn'), menu = d.getElementById('menu');
+  function setMenu(open) {
+    btn.setAttribute('aria-expanded', open);
+    btn.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    d.body.classList.toggle('menu-open', open);
+    if (open) { menu.hidden = false; requestAnimationFrame(function () { menu.classList.add('is-open'); }); }
+    else { menu.classList.remove('is-open'); setTimeout(function () { if (!d.body.classList.contains('menu-open')) menu.hidden = true; }, 300); }
+    onScroll();
+  }
+  btn.addEventListener('click', function () { setMenu(btn.getAttribute('aria-expanded') !== 'true'); });
+  menu.addEventListener('click', function (e) { if (e.target.closest('a')) setMenu(false); });
+  d.addEventListener('keydown', function (e) { if (e.key === 'Escape' && d.body.classList.contains('menu-open')) setMenu(false); });
+
+  /* copy link */
+  var toast = d.getElementById('toast'), copy = d.getElementById('copyBtn');
+  function show(msg) { toast.textContent = msg; toast.classList.add('show'); setTimeout(function () { toast.classList.remove('show'); }, 2200); }
+  copy.addEventListener('click', function () {
+    var url = 'https://asha8-8.github.io/founder-profile/';
     if (navigator.clipboard && navigator.clipboard.writeText) {
-      return navigator.clipboard.writeText(url);
-    }
-    return new Promise(function (resolve, reject) {
-      try {
-        var ta = document.createElement('textarea');
-        ta.value = url;
-        ta.setAttribute('readonly', '');
-        ta.style.position = 'fixed';
-        ta.style.opacity = '0';
-        document.body.appendChild(ta);
-        ta.select();
-        var ok = document.execCommand('copy');
-        document.body.removeChild(ta);
-        ok ? resolve() : reject(new Error('copy failed'));
-      } catch (e) { reject(e); }
-    });
-  }
-
-  function shareProfile() {
-    var url = location.href.split('#')[0];
-    var data = { title: document.title, text: 'Founder profile: Asha Prakash Panda, APSARA EdTech Labs', url: url };
-    var attempt = (navigator.share && /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent))
-      ? navigator.share(data)
-      : Promise.reject(new Error('no share'));
-    attempt.catch(function (err) {
-      if (err && err.name === 'AbortError') { return; }
-      return copy(url).then(function () { say('Profile link copied.'); }, function () { say('Copy the address from the browser bar.'); });
-    });
-  }
-
-  var buttons = document.querySelectorAll('[data-share]');
-  for (var i = 0; i < buttons.length; i++) {
-    buttons[i].addEventListener('click', shareProfile);
-  }
+      navigator.clipboard.writeText(url).then(function () { show('Link copied'); }, function () { show(url); });
+    } else { show(url); }
+  });
 })();
