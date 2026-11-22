@@ -228,3 +228,12 @@ input[type=range]::-moz-range-thumb { width: 22px; height: 22px; background: var
 .nb { white-space: nowrap; }
 .models .first { font-size: 0.95rem; color: var(--bronze); }
 .models .first strong { color: var(--bronze); }
+
+/* Product screenshots in a browser frame */
+.shot { margin: 0; border: 1px solid rgba(16,28,46,0.18); border-radius: 10px; overflow: hidden; background: #fff; box-shadow: 0 18px 40px -22px rgba(16,28,46,0.45); }
+.shot .bar-top { display: flex; align-items: center; gap: 6px; padding: 9px 12px; background: #E9E3D6; border-bottom: 1px solid rgba(16,28,46,0.12); }
+.shot .bar-top i { width: 9px; height: 9px; border-radius: 50%; background: #C9BFA9; display: block; }
+.shot .bar-top span { margin-left: 10px; font-family: var(--sans); font-size: 0.72rem; letter-spacing: 0.02em; color: var(--ink-2); background: rgba(255,255,255,0.7); padding: 3px 12px; border-radius: 999px; }
+.shot img { display: block; width: 100%; height: auto; }
+.shot-lg { margin: 34px 0 6px; max-width: 880px; box-shadow: 0 30px 60px -28px rgba(0,0,0,0.7); border-color: rgba(255,255,255,0.18); }
+.prod .shot { margin-bottom: 6px; }
