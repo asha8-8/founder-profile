@@ -89,7 +89,7 @@ body.menu-open .bar{background:transparent;color:var(--ivory);box-shadow:none}
 .hero__plate{grid-area:plate;padding-bottom:26px}
 .plate__name{font-family:var(--serif);font-size:1.5rem;line-height:1.1}
 .plate__role{text-wrap:balance;font-size:.82rem;line-height:1.5;color:var(--mist);margin-top:10px;padding-top:10px;border-top:1px solid rgba(216,180,122,.5)}
-.hero__art{grid-area:art;position:relative;justify-self:end;width:100%;max-width:340px;margin-right:-4px}
+.hero__art{grid-area:art;position:relative;justify-self:end;width:100%;max-width:210px;margin-right:-4px}
 .arch{position:relative;border-radius:999px 999px 0 0;overflow:hidden;background:var(--navy2);aspect-ratio:4/5}
 .arch img{width:100%;height:100%;object-fit:cover;object-position:50% 8%}
 .hero__art::before{content:"";position:absolute;inset:-9px -9px 0 9px;border:1px solid rgba(216,180,122,.55);border-bottom:0;border-radius:999px 999px 0 0;pointer-events:none}
@@ -104,7 +104,7 @@ body.menu-open .bar{background:transparent;color:var(--ivory);box-shadow:none}
 .ribbon b{display:block;font-family:var(--serif);font-weight:400;font-size:1.45rem;color:var(--ivory);line-height:1.15}
 @media(min-width:900px){
   .hero__in{grid-template-columns:1.35fr .8fr;grid-template-areas:"text art" "plate art";column-gap:60px;padding-top:110px;min-height:calc(100svh - 92px)}
-  .hero__art{max-width:430px;margin-right:0}
+  .hero__art{max-width:320px;margin-right:0}
   .hero__plate{padding-bottom:44px;max-width:300px}
   .plate__name{font-size:1.9rem}
   .plate__role{font-size:.9rem}
