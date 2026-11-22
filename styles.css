@@ -91,7 +91,7 @@ body.menu-open .bar{background:transparent;color:var(--ivory);box-shadow:none}
 .plate__role{text-wrap:balance;font-size:.82rem;line-height:1.5;color:var(--mist);margin-top:10px;padding-top:10px;border-top:1px solid rgba(216,180,122,.5)}
 .hero__art{grid-area:art;position:relative;justify-self:end;width:100%;max-width:340px;margin-right:-4px}
 .arch{position:relative;border-radius:999px 999px 0 0;overflow:hidden;background:var(--navy2);aspect-ratio:4/5}
-.arch img{width:100%;height:100%;object-fit:cover;object-position:50% 20%}
+.arch img{width:100%;height:100%;object-fit:cover;object-position:50% 8%}
 .hero__art::before{content:"";position:absolute;inset:-9px -9px 0 9px;border:1px solid rgba(216,180,122,.55);border-bottom:0;border-radius:999px 999px 0 0;pointer-events:none}
 .js .hero__art{opacity:0;transform:translateY(26px);transition:opacity 1.2s var(--ease) .5s,transform 1.4s var(--ease) .5s}
 .js .hero.is-ready .hero__art{opacity:1;transform:none}
